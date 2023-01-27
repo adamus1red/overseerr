@@ -42,6 +42,9 @@ RUN apk add --no-cache tzdata tini && rm -rf /tmp/*
 # copy from build image
 COPY --from=BUILD_IMAGE /app ./
 
+HEALTHCHECK --interval=12s --timeout=12s --start-period=30s \
+  CMD curl --fail http://localhost:5055 || exit 1     
+
 ENTRYPOINT [ "/sbin/tini", "--" ]
 CMD [ "yarn", "start" ]
 
