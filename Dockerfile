@@ -37,13 +37,13 @@ FROM node:16.17-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache tzdata tini && rm -rf /tmp/*
+RUN apk add --no-cache tzdata tini curl && rm -rf /tmp/*
 
 # copy from build image
 COPY --from=BUILD_IMAGE /app ./
 
 HEALTHCHECK --interval=12s --timeout=12s --start-period=30s \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:5055/login || exit 1     
+  CMD curl --fail http://localhost:5055/login || exit 1     
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
 CMD [ "yarn", "start" ]
